@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="World GK Facts - General Knowledge facts and quiz">
+<title>World GK Facts</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f4f7fb;color:#172033;line-height:1.6}
+header{background:linear-gradient(135deg,#174ea6,#4285f4);color:white;padding:28px 16px;text-align:center}
+header h1{font-size:34px;margin-bottom:6px}
+header p{opacity:.95}
+nav{background:white;display:flex;justify-content:center;gap:8px;padding:10px;position:sticky;top:0;z-index:5;box-shadow:0 2px 10px #0001}
+nav button{border:0;background:#eef4ff;color:#174ea6;padding:10px 16px;border-radius:22px;font-weight:bold;cursor:pointer}
+nav button:hover{background:#dbe8ff}
+.container{max-width:1000px;margin:auto;padding:20px 15px}
+.search{display:flex;gap:10px;margin-bottom:20px}
+.search input{flex:1;padding:13px;border:1px solid #ccd5e2;border-radius:10px;font-size:16px}
+.section{display:none}
+.section.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px}
+.card{background:white;padding:20px;border-radius:15px;box-shadow:0 4px 15px #0000000d;border:1px solid #e6ebf2}
+.card h3{color:#174ea6;margin-bottom:8px}
+.fact{margin-bottom:12px;padding:13px;background:#f8fbff;border-left:4px solid #4285f4;border-radius:8px}
+.quiz-box{background:white;padding:22px;border-radius:15px;box-shadow:0 4px 15px #0001}
+.option{display:block;width:100%;text-align:left;margin:10px 0;padding:13px;border:1px solid #ccd5e2;background:white;border-radius:9px;cursor:pointer}
+.option:hover{background:#eef4ff}
+.correct{background:#d9f7df!important;border-color:#37a64a!important}
+.wrong{background:#ffe0e0!important;border-color:#d33!important}
+.primary{border:0;background:#174ea6;color:white;padding:12px 18px;border-radius:9px;cursor:pointer;font-weight:bold}
+footer{text-align:center;padding:25px;color:#667085}
+.badge{display:inline-block;background:#e8f1ff;color:#174ea6;padding:4px 9px;border-radius:15px;font-size:12px;margin-bottom:8px}
+@media(max-width:600px){header h1{font-size:27px}.search{flex-direction:column}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌍 World GK Facts</h1>
+  <p>Learn interesting facts and test your general knowledge!</p>
+</header>
+
+<nav>
+  <button onclick="showSection('home')">🏠 Home</button>
+  <button onclick="showSection('facts')">📚 Facts</button>
+  <button onclick="showSection('quiz')">🧠 Quiz</button>
+</nav>
+
+<main class="container">
+<section id="home" class="section active">
+  <div class="search">
+    <input id="searchInput" type="text" placeholder="Search a fact...">
+    <button class="primary" onclick="searchFacts()">Search</button>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="badge">🌎 Geography</div><h3>Explore the World</h3><p>Discover countries, continents, oceans and amazing places.</p></div>
+    <div class="card"><div class="badge">🔬 Science</div><h3>Science Facts</h3><p>Learn simple and interesting facts about science and nature.</p></div>
+    <div class="card"><div class="badge">🏛️ History</div><h3>History</h3><p>Explore important people, events and discoveries from history.</p></div>
+    <div class="card"><div class="badge">🧠 Challenge</div><h3>Take the Quiz</h3><p>Answer questions and see how high you can score.</p></div>
+  </div>
+</section>
+
+<section id="facts" class="section">
+  <h2>📚 General Knowledge Facts</h2><br>
+  <div id="factList"></div>
+</section>
+
+<section id="quiz" class="section">
+  <div class="quiz-box">
+    <h2>🧠 GK Quiz</h2><p id="progress"></p><br>
+    <h3 id="question"></h3>
+    <div id="options"></div>
+    <p id="result"></p><br>
+    <button id="nextBtn" class="primary" onclick="nextQuestion()" style="display:none">Next Question ➜</button>
+  </div>
+</section>
+</main>
+
+<footer>© 2026 World GK Facts • Made for learning 🌍</footer>
+
+<script>
+const facts=[
+["Geography","The Pacific Ocean is the largest ocean on Earth."],
+["Geography","Asia is the largest continent by area and population."],
+["Geography","The Sahara is the largest hot desert in the world."],
+["Science","Water freezes at 0°C under standard atmospheric pressure."],
+["Science","Light travels faster than sound."],
+["Science","The human adult body normally has 206 bones."],
+["Space","Jupiter is the largest planet in our Solar System."],
+["Space","The Moon is Earth's natural satellite."],
+["History","The Great Wall is a historic defensive network in China."],
+["Animals","The blue whale is the largest known animal."],
+["Animals","Cheetahs are among the fastest land animals."],
+["Nature","Plants use photosynthesis to convert light energy into chemical energy."]
+];
+
+const factList=document.getElementById("factList");
+function renderFacts(list=facts){
+  factList.innerHTML=list.map(f=>`<div class="fact"><b>${f[0]}:</b> ${f[1]}</div>`).join("");
+}
+renderFacts();
+
+function showSection(id){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if(id==="quiz") loadQuestion();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function searchFacts(){
+  const q=document.getElementById("searchInput").value.toLowerCase().trim();
+  showSection("facts");
+  const result=facts.filter(f=>(f[0]+" "+f[1]).toLowerCase().includes(q));
+  renderFacts(q?result:facts);
+}
+
+const questions=[
+{q:"Which is the largest planet in our Solar System?",o:["Earth","Jupiter","Mars","Venus"],a:1},
+{q:"Which is the largest ocean?",o:["Atlantic Ocean","Indian Ocean","Pacific Ocean","Arctic Ocean"],a:2},
+{q:"How many bones are normally in an adult human body?",o:["106","206","306","406"],a:1},
+{q:"Which animal is the largest known animal?",o:["Elephant","Giraffe","Blue whale","Shark"],a:2},
+{q:"At what temperature does water freeze under standard pressure?",o:["0°C","10°C","50°C","100°C"],a:0},
+{q:"Which continent is the largest by area?",o:["Africa","Asia","Europe","Australia"],a:1}
+];
+
+let qi=0,score=0,answered=false;
+function loadQuestion(){
+  answered=false;
+  const x=questions[qi];
+  document.getElementById("progress").textContent=`Question ${qi+1} of ${questions.length} • Score: ${score}`;
+  document.getElementById("question").textContent=x.q;
+  document.getElementById("result").textContent="";
+  document.getElementById("nextBtn").style.display="none";
+  document.getElementById("options").innerHTML=x.o.map((v,i)=>`<button class="option" onclick="answer(${i},this)">${v}</button>`).join("");
+}
+function answer(i,btn){
+  if(answered)return;
+  answered=true;
+  const x=questions[qi];
+  document.querySelectorAll(".option")[x.a].classList.add("correct");
+  if(i===x.a){score++;document.getElementById("result").textContent="✅ Correct!";}
+  else{btn.classList.add("wrong");document.getElementById("result").textContent="❌ Wrong answer!";}
+  document.getElementById("progress").textContent=`Question ${qi+1} of ${questions.length} • Score: ${score}`;
+  document.getElementById("nextBtn").style.display="inline-block";
+}
+function nextQuestion(){
+  qi++;
+  if(qi>=questions.length){
+    document.getElementById("question").textContent=`🎉 Quiz Complete! Your score is ${score}/${questions.length}.`;
+    document.getElementById("options").innerHTML="";
+    document.getElementById("result").textContent=score>=5?"Excellent! 🌟":score>=3?"Good job! 👍":"Keep learning and try again! 📚";
+    document.getElementById("nextBtn").style.display="none";
+    qi=0;score=0;
+  }else loadQuestion();
+}
+</script>
+</body>
+</html>
